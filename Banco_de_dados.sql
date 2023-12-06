@@ -11,9 +11,12 @@ CREATE TABLE Cliente (
 );
 --Adicionando clientes 
 INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
-VALUES (1, 'João', 'Silva', '123456789', '123456789', 'joao.silva@example.com'),
-VALUES (2, 'leo', 'chaves', '123446889', '123456789', 'leo.chaves@example.com'),
-VALUES (3, 'luis', 'miguel', '125556889', '123456789', 'luis.miguel@example.com'),
+VALUES (1, 'João', 'Silva', '123456789', '123456789', 'joao.silva@example.com');
+INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
+VALUES (2, 'leo', 'chaves', '123446889', '123456789', 'leo.chaves@example.com');
+INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
+VALUES (3, 'luis', 'miguel', '125556889', '123456789', 'luis.miguel@example.com');
+INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
 VALUES (4, 'lucas', 'bruck', '123456789', '123456789', 'lucas.bruck@example.com');
 
 --criando Veiculo
@@ -171,55 +174,127 @@ CREATE INDEX idx_fk_atende_locacao ON Atende (IDLocacao);
 CREATE INDEX idx_fk_tem_modelo_veiculo ON TemModelo (IDVeiculo);
 CREATE INDEX idx_fk_tem_modelo_modelo ON TemModelo (IDModeloVeiculo);
 
-
--- Consultas INNER JOIN relevantes
-/* Query 1: Listar locações com detalhes do cliente e veículo */
-SELECT Locacao.*, Cliente.Nome AS NomeCliente, Veiculo.Placa
+/*
+Query 1: Lista todas as locações, incluindo os dados do cliente e do veículo envolvido.
+Essa query retorna todos os dados das locações, incluindo os dados do cliente e do veículo envolvido.
+Essa query é útil para obter uma visão geral das locações realizadas.
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente,
+  Veiculo.Placa
 FROM Locacao
 INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
 INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo;
 
-/* Query 2: Listar funcionários que atenderam locações */
-SELECT Atende.*, Funcionario.Nome AS NomeFuncionario
-FROM Atende
-INNER JOIN Funcionario ON Atende.IDFuncionario = Funcionario.IDFuncionario;
-
-/* Query 3: Listar locações e seus envolvimentos (veículos envolvidos) */
-SELECT Locacao.*, Veiculo.Placa
+/*
+Query 2: Lista todas as locações realizadas por um determinado cliente.
+ Essa query retorna todas as locações realizadas por um determinado cliente.
+ Essa query é útil para obter informações sobre as locações realizadas por um cliente específico.
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente,
+  Veiculo.Placa
 FROM Locacao
-INNER JOIN Envolvido ON Locacao.IDLocacao = Envolvido.IDLocacao
-INNER JOIN Veiculo ON Envolvido.IDVeiculo = Veiculo.IDVeiculo;
+INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
+INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
+WHERE Cliente.IDCliente = 1;
 
-/* Query 4: Listar clientes que realizaram locações e os detalhes das locações */
-SELECT Cliente.*, Locacao.*
-FROM Cliente
-INNER JOIN Realiza ON Cliente.IDCliente = Realiza.IDCliente
-INNER JOIN Locacao ON Realiza.IDLocacao = Locacao.IDLocacao;
+/*
+Query 3: Lista todas as locações realizadas de um determinado modelo de veículo.
+ Essa query retorna todas as locações realizadas de um determinado modelo de veículo. 
+ Essa query é útil para obter informações sobre as locações realizadas de um modelo de veículo específico.
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente,
+  Veiculo.Placa
+FROM Locacao
+INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
+INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
+WHERE Veiculo.Modelo = 'Gol';
 
-/* Query 5: Exemplo de INNER JOIN adicional conforme necessário */
-/* Query com LEFT JOIN: Exemplo de listar veículos e seus modelos, mesmo que não tenham um modelo associado */
-SELECT Veiculo.*, ModeloVeiculo.Marca, ModeloVeiculo.Modelo
-FROM Veiculo
-LEFT JOIN TemModelo ON Veiculo.IDVeiculo = TemModelo.IDVeiculo
-LEFT JOIN ModeloVeiculo ON TemModelo.IDModeloVeiculo = ModeloVeiculo.IDModeloVeiculo;
-/* Query 1: Contar o número de locações realizadas por cada cliente */
-SELECT Cliente.Nome, COUNT(Locacao.IDLocacao) AS NumeroLocacoes
-FROM Cliente
-INNER JOIN Realiza ON Cliente.IDCliente = Realiza.IDCliente
-INNER JOIN Locacao ON Realiza.IDLocacao = Locacao.IDLocacao
-GROUP BY Cliente.Nome;
+/*
+Query 4: Lista todas as locações realizadas em um determinado período de tempo.
+Essa query retorna todas as locações realizadas em um determinado período de tempo. 
+Essa query é útil para obter informações sobre as locações realizadas em um período específico.
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente,
+  Veiculo.Placa
+FROM Locacao
+INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
+INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
+WHERE DataInicioLocacao BETWEEN '2023-12-01' AND '2023-12-31';
 
-/* Query 2: Calcular a média de salário dos funcionários por cargo */
-SELECT Cargo, AVG(Salario) AS MediaSalario
-FROM Funcionario
-GROUP BY Cargo;
+/*
+Query 5: Lista todas as locações realizadas por um determinado funcionário.
+Essa query retorna todas as locações realizadas por um determinado funcionário. 
+Essa query é útil para obter informações sobre as locações realizadas por um funcionário específico.
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente,
+  Veiculo.Placa
+FROM Locacao
+INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
+INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
+INNER JOIN Atende ON Locacao.IDLocacao = Atende.IDLocacao
+WHERE Atende.IDFuncionario = 1;
 
-/* Query 3: Exemplo de função de agregação adicional conforme necessário */
-/* Query 4: Exemplo de função de agregação adicional conforme necessário */
-/* Query 4: Contar o número de locações realizadas */
-SELECT COUNT(IDLocacao) AS TotalLocacoes
+/*
+Left join
+Query 1: Lista todas as locações, mesmo que não tenham um veículo associado.
+Isso pode ser útil para obter informações sobre locações que foram canceladas, 
+ou que o veículo foi devolvido sem ser registrado no sistema
+*/
+SELECT
+  Locacao.*,
+  Cliente.Nome AS NomeCliente
+FROM Locacao
+LEFT JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
+LEFT JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo;
+
+/*
+Gere cinco queries, utilizando funções de agregação (COUNT, SUM, MIN, MAX,
+AVG,....),
+Query 1: Conta o número total de locações.
+Essa query é útil para obter uma visão geral do volume de locações realizadas.
+*/
+SELECT COUNT(*) AS TotalLocacoes
 FROM Locacao;
 
-/* Query 5: Calcular o valor total de locações */
+/*
+Query 2: Calcula o valor total das locações.
+Essa query é útil para obter uma visão geral do faturamento do negócio
+*/
 SELECT SUM(ValorLocacao) AS ValorTotalLocacoes
 FROM Locacao;
+
+/*
+Query 3: Essa query retorna o valor total das locações realizadas por cada modelo de veículo.
+Essa query é útil para obter informações sobre o faturamento do negócio por modelo de veícul
+*/
+SELECT Veiculo.Modelo AS Modelo,
+SUM(ValorLocacao) AS ValorTotalLocacoes
+FROM Locacao
+INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
+GROUP BY Veiculo.Modelo;
+
+/*
+Query 4: Mostra a data de fim da última locação.
+Essa query pode ser útil para obter informações sobre o último dia de atividades do negócio.
+*/
+SELECT MAX(DataFimLocacao) AS DataFimLocacao;
+
+/*
+Query 5: Mostra a média do tempo de duração das locações.
+Essa query pode ser útil para obter informações sobre a duração média das locações realizadas.
+*/
+SELECT AVG(TIMESTAMPDIFF(MINUTE, DataInicioLocacao, DataFimLocacao)) AS MediaTempoLocacao
+FROM Locacao;
+
+/*select*/
+SELECT * from Veiculo;
