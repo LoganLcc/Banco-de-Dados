@@ -18,6 +18,8 @@ INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
 VALUES (3, 'luis', 'miguel', '125556889', '123456789', 'luis.miguel@example.com');
 INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
 VALUES (4, 'lucas', 'bruck', '123456789', '123456789', 'lucas.bruck@example.com');
+INSERT INTO Cliente (IDCliente, Nome, Sobrenome, CNH, Telefone, Email)
+VALUES (5, 'Wesley', 'sla', '123456789', '123456789', 'lucas.bruck@example.com');
 
 --criando Veiculo
 CREATE TABLE Veiculo (
@@ -28,13 +30,13 @@ CREATE TABLE Veiculo (
 );
 
 --Adicionando Veiculo 
-INSERT INTO Veiculo (Placa, AnoFabricacao, Estado)
+INSERT INTO Veiculo (IDVeiculo,Placa, AnoFabricacao, Estado)
 VALUES
-('ABC-1234', 2023, 'disponivel'),
-('DEF-5678', 2022, 'disponivel'),
-('GHI-9012', 2021, 'alugado'),
-('JKL-3456', 2020, 'alugado'),
-('MNO-7890', 2019, 'disponivel');
+(1,'ABC-1234', 2023, 'disponivel'),
+(2,'DEF-5678', 2022, 'disponivel'),
+(3,'GHI-9012', 2021, 'alugado'),
+(4,'JKL-3456', 2020, 'alugado'),
+(5,'MNO-7890', 2019, 'disponivel');
 
 
 CREATE TABLE ModeloVeiculo (
@@ -47,13 +49,13 @@ CREATE TABLE ModeloVeiculo (
 );
 
 --Adicionando ModeloVeiculo
-INSERT INTO ModeloVeiculo (Marca, Modelo, AnoLancamento, CapacidadePassageiros, CapacidadePortaMalas)
+INSERT INTO ModeloVeiculo (IDModeloVeiculo,Marca, Modelo, AnoLancamento, CapacidadePassageiros, CapacidadePortaMalas)
 VALUES
-('Volkswagen', 'Gol', 2023, 5, 300),
-('Fiat', 'Uno', 2022, 4, 200),
-('Hyundai', 'HB20', 2021, 5, 350),
-('Chevrolet', 'Onix', 2020, 5, 250),
-('Toyota', 'Corolla', 2019, 5, 450);
+(1,'Volkswagen', 'Gol', 2023, 5, 300),
+(2,'Fiat', 'Uno', 2022, 4, 200),
+(3,'Hyundai', 'HB20', 2021, 5, 350),
+(4,'Chevrolet', 'Onix', 2020, 5, 250),
+(5,'Toyota', 'Corolla', 2019, 5, 450);
 
 --cria locação 
 CREATE TABLE Locacao (
@@ -67,13 +69,13 @@ CREATE TABLE Locacao (
     FOREIGN KEY (IDVeiculo) REFERENCES Veiculo(IDVeiculo) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 --inseri locação
-INSERT INTO Locacao (IDCliente, IDVeiculo, DataInicioLocacao, DataFimLocacao, ValorLocacao)
+INSERT INTO Locacao (IDLocacao,IDCliente, IDVeiculo, DataInicioLocacao, DataFimLocacao, ValorLocacao)
 VALUES
-(1, 1, '2023-12-07', '2023-12-14', 1000.00),
-(2, 2, '2023-12-08', '2023-12-15', 800.00),
-(3, 3, '2023-12-09', '2023-12-16', 700.00),
-(4, 4, '2023-12-10', '2023-12-17', 600.00),
-(5, 5, '2023-12-11', '2023-12-18', 500.00);
+(1,1, 1, '2023-12-07', '2023-12-14', 1000.00),
+(2,2, 2, '2023-12-08', '2023-12-15', 800.00),
+(3,3, 3, '2023-12-09', '2023-12-16', 700.00),
+(4,4, 4, '2023-12-10', '2023-12-17', 600.00),
+(5,5, 5, '2023-12-11', '2023-12-18', 500.00);
 
 --criando Funcionarios
 CREATE TABLE Funcionario (
@@ -84,13 +86,13 @@ CREATE TABLE Funcionario (
     Salario DECIMAL(10,2)CHECK (Salario >= 0)
 );
 --Adicionando Funcionarios
-INSERT INTO Funcionario (Nome, Sobrenome, Cargo, Salario)
+INSERT INTO Funcionario (IDFuncionario,Nome, Sobrenome, Cargo, Salario)
 VALUES
-('João', 'Silva', 'Gerente', 5000.00),
-('Maria', 'Souza', 'Vendedor', 2500.00),
-('Pedro', 'Santos', 'Analista', 3500.00),
-('Ana', 'Lima', 'Secretária', 2000.00),
-('Carlos', 'Martins', 'Operador', 1500.00);
+(1,'João', 'Silva', 'Gerente', 5000.00),
+(2,'Maria', 'Souza', 'Vendedor', 2500.00),
+(3,'Pedro', 'Santos', 'Analista', 3500.00),
+(4,'Ana', 'Lima', 'Secretária', 2000.00),
+(5,'Carlos', 'Martins', 'Operador', 1500.00);
 
 
 -- Relacionamentos
@@ -103,13 +105,13 @@ CREATE TABLE Realiza (
     FOREIGN KEY (IDLocacao) REFERENCES Locacao(IDLocacao) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 --cria realzia
-INSERT INTO Realiza (IDLocacao, IDModeloVeiculo, QuilometragemInicial, QuilometragemFinal)
+INSERT INTO Realiza (IDRealiza,IDCliente, IDLocacao, DataHoraRealizacao)
 VALUES
-(1, 1, 1000, 2000),
-(2, 2, 2000, 3000),
-(3, 3, 3000, 4000),
-(4, 4, 4000, 5000),
-(5, 5, 5000, 6000);
+(1,1, 1, '2023-12-01 12:00:00'),
+(2,2, 2,'2023-12-04 9:00:00'),
+(3,3, 3, '2023-12-07 14:00:00'),
+(4,4, 4, '2023-12-23 17:00:00'),
+(5,5, 5, '2023-12-08 18:00:00');
 
 
 CREATE TABLE Envolvido (
@@ -121,13 +123,13 @@ CREATE TABLE Envolvido (
     FOREIGN KEY (IDLocacao) REFERENCES Locacao(IDLocacao) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 --cria envonvido 
-INSERT INTO Envolvido (IDVeiculo, IDLocacao, DataHoraEnvolvimento)
+INSERT INTO Envolvido (IDEnvolvido,IDVeiculo, IDLocacao, DataHoraEnvolvimento)
 VALUES
-(1, 1, '2023-12-08 10:00:00'),
-(2, 2, '2023-12-09 11:00:00'),
-(3, 3, '2023-12-10 12:00:00'),
-(4, 4, '2023-12-11 13:00:00'),
-(5, 5, '2023-12-12 14:00:00');
+(1,1, 1, '2023-12-08 10:00:00'),
+(2,2, 2, '2023-12-09 11:00:00'),
+(3,3, 3, '2023-12-10 12:00:00'),
+(4,4, 4, '2023-12-11 13:00:00'),
+(5,5, 5, '2023-12-12 14:00:00');
 
 
 CREATE TABLE Atende (
@@ -139,13 +141,13 @@ CREATE TABLE Atende (
     FOREIGN KEY (IDLocacao) REFERENCES Locacao(IDLocacao) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-INSERT INTO Atende (IDFuncionario, IDLocacao, DataHoraAtendimento)
+INSERT INTO Atende (IDAtende,IDFuncionario, IDLocacao, DataHoraAtendimento)
 VALUES
-(1, 1, '2023-12-07 15:00:00'),
-(2, 2, '2023-12-08 16:00:00'),
-(3, 3, '2023-12-09 17:00:00'),
-(4, 4, '2023-12-10 18:00:00'),
-(5, 5, '2023-12-11 19:00:00');
+(1,1, 1, '2023-12-07 15:00:00'),
+(2,2, 2, '2023-12-08 16:00:00'),
+(3,3, 3, '2023-12-09 17:00:00'),
+(4,4, 4, '2023-12-10 18:00:00'),
+(5,5, 5, '2023-12-11 19:00:00');
 
 
 CREATE TABLE TemModelo (
@@ -155,13 +157,13 @@ CREATE TABLE TemModelo (
     FOREIGN KEY (IDVeiculo) REFERENCES Veiculo(IDVeiculo) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (IDModeloVeiculo) REFERENCES ModeloVeiculo(IDModeloVeiculo) ON UPDATE CASCADE ON DELETE RESTRICT
 );
-INSERT INTO TemModelo (IDVeiculo, IDModeloVeiculo)
+INSERT INTO TemModelo (IDTemModelo,IDVeiculo, IDModeloVeiculo)
 VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
+(1,1, 1),
+(2,2, 2),
+(3,3, 3),
+(4,4, 4),
+(5,5, 5);
 
 
 -- Índices
@@ -213,8 +215,8 @@ SELECT
 FROM Locacao
 INNER JOIN Cliente ON Locacao.IDCliente = Cliente.IDCliente
 INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
-WHERE Veiculo.Modelo = 'Gol';
-
+--WHERE Veiculo.Modelo = 'Gol';
+WHERE Veiculo.placa = 'ABC-1234';
 /*
 Query 4: Lista todas as locações realizadas em um determinado período de tempo.
 Essa query retorna todas as locações realizadas em um determinado período de tempo. 
@@ -276,25 +278,30 @@ FROM Locacao;
 /*
 Query 3: Essa query retorna o valor total das locações realizadas por cada modelo de veículo.
 Essa query é útil para obter informações sobre o faturamento do negócio por modelo de veícul
-*/
+
 SELECT Veiculo.Modelo AS Modelo,
 SUM(ValorLocacao) AS ValorTotalLocacoes
 FROM Locacao
 INNER JOIN Veiculo ON Locacao.IDVeiculo = Veiculo.IDVeiculo
 GROUP BY Veiculo.Modelo;
+*/
 
 /*
 Query 4: Mostra a data de fim da última locação.
 Essa query pode ser útil para obter informações sobre o último dia de atividades do negócio.
 */
-SELECT MAX(DataFimLocacao) AS DataFimLocacao;
+SELECT MAX(DataFimLocacao) AS DataFimLocacao
+FROM Locacao;
 
 /*
 Query 5: Mostra a média do tempo de duração das locações.
 Essa query pode ser útil para obter informações sobre a duração média das locações realizadas.
-*/
+
 SELECT AVG(TIMESTAMPDIFF(MINUTE, DataInicioLocacao, DataFimLocacao)) AS MediaTempoLocacao
 FROM Locacao;
-
+*/
 /*select*/
 SELECT * from Veiculo;
+
+SELECT *
+FROM modeloveiculo;
